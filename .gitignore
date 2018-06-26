@@ -1,3 +1,5 @@
 .idea/
 midiGen.iml
 out/
+.gradle
+build

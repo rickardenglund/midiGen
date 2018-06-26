@@ -1,0 +1,16 @@
+apply plugin: 'java'
+apply plugin: 'application'
+sourceCompatibility = 1.10
+targetCompatibility = 1.10
+
+mainClassName = 'midigen.Main'
+
+sourceSets {
+  main {
+    resources {
+        srcDirs = ["src/main/java"]
+        includes = ["**/*.fxml"]
+    }
+  }
+}
+
