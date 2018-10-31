@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>React + Spring</title>
+</head>
+<body>
+<div id='root'></div>
+
+<script src="https://fb.me/react-15.0.1.js"></script>
+<script src="https://fb.me/react-dom-15.0.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+<script type="text/babel">
+    class MidiDevice extends React.Component {
+        render() {
+            return (
+                <tr>
+                    <td>{this.props.midiDevice.name}</td>
+                    <td>{this.props.midiDevice.description}</td>
+                    <td>{this.props.midiDevice.vendor}</td>
+                </tr>);
+        }
+    };
+
+    class MidiDeviceTable extends React.Component {
+        render() {
+            var rows = [];
+            var i = 0;
+            this.props.midiDevices.forEach(function (midiDevice) {
+                midiDevice.key = i++;
+                rows.push(<MidiDevice midiDevice={midiDevice}/>);
+            });
+            return (
+                <div className="container">
+                    <table className="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Vendor</th>
+                        </tr>
+                        </thead>
+                        <tbody>{rows}</tbody>
+                    </table>
+                </div>);
+        }
+    };
+
+    class App extends React.Component {
+
+        constructor(props) {
+            super(props)
+            this.state = {midiDevices: []};
+        }
+
+        loadMidiDevices() {
+            var self = this;
+            $.ajax({
+                url: "http://localhost:8080/list"
+            }).then(function (data) {
+                console.log(data)
+                self.setState({midiDevices: data});
+            });
+        };
+
+        componentDidMount () {
+            this.loadMidiDevices();
+        }
+
+        render() {
+            return ( <MidiDeviceTable midiDevices={this.state.midiDevices}/> );
+        }
+    };
+
+    ReactDOM.render(
+        <App/>, document.getElementById('root')
+    );
+</script>
+</body>
+</html>
