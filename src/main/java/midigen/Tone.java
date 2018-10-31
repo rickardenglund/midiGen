@@ -16,4 +16,11 @@ public class Tone {
     public int getTime() {
         return time;
     }
+
+    @Override
+    public String toString() {
+        return "Tone{" +
+                "pitch=" + pitch +
+                '}';
+    }
 }

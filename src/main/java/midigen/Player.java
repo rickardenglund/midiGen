@@ -2,6 +2,7 @@ package midigen;
 
 import javax.sound.midi.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -38,11 +39,16 @@ public class Player {
         randomSequence();
     }
 
+    static List<String> listAvailableDevices() {
+        MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
+        return Arrays.stream(infos).map(it -> it.getName() + ": " + it.getDescription()).collect(Collectors.toList());
+    }
+
     public void randomSequence() {
         var newSeq = new ArrayList<Tone>();
 
         for (var i = 0; i < 3; i++) {
-            newSeq.add(new Tone(majorScaleOffsets.get(ThreadLocalRandom.current().nextInt(5)), 50));
+            newSeq.add(new Tone(majorScaleOffsets.get(ThreadLocalRandom.current().nextInt(5)), 500));
         }
 
         sequence = newSeq;
@@ -61,17 +67,36 @@ public class Player {
         }
     }
 
+
+    void setInstrument(int instrument) {
+        System.out.println("Setting instrument: " + instrument);
+        ShortMessage myMsg = new ShortMessage();
+        long timeStamp = -1;
+        int channel = 0;
+        try {
+            Receiver receiver = MidiSystem.getReceiver();
+            myMsg.setMessage(ShortMessage.PROGRAM_CHANGE, channel, instrument, 0);
+            receiver.send(myMsg, timeStamp);
+        } catch (InvalidMidiDataException e) {
+            e.printStackTrace();
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
     private void play(Tone tone) {
         ShortMessage myMsg = new ShortMessage();
+        int channel = 0;
         try {
-            myMsg.setMessage(ShortMessage.NOTE_ON, 0, tone.getPitch(), 100);
-
             long timeStamp = -1;
             Receiver receiver = MidiSystem.getReceiver();
+
+            myMsg.setMessage(ShortMessage.NOTE_ON, channel, tone.getPitch(), 93);
             receiver.send(myMsg, timeStamp);
+
             Thread.sleep(tone.getTime());
 
-            myMsg.setMessage(ShortMessage.NOTE_OFF, 0, tone.getPitch(), 100);
+            myMsg.setMessage(ShortMessage.NOTE_OFF, channel, tone.getPitch(), 93);
             receiver.send(myMsg, timeStamp);
         } catch (InvalidMidiDataException | InterruptedException e) {
             e.printStackTrace();
