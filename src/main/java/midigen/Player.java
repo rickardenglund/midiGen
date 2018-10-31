@@ -39,9 +39,8 @@ public class Player {
         randomSequence();
     }
 
-    static List<String> listAvailableDevices() {
-        MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
-        return Arrays.stream(infos).map(it -> it.getName() + ": " + it.getDescription()).collect(Collectors.toList());
+    static List<MidiDevice.Info> listAvailableDevices() {
+        return Arrays.asList(MidiSystem.getMidiDeviceInfo());
     }
 
     public void randomSequence() {
@@ -105,4 +104,7 @@ public class Player {
         }
     }
 
+    public MidiDevice.Info getMidiDevice() {
+        return device.getDeviceInfo();
+    }
 }

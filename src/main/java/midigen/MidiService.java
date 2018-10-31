@@ -1,13 +1,16 @@
 package midigen;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MidiService {
     Player player = new Player();
 
-    private MidiService() {}
+    private MidiService() {
+    }
 
     private static MidiService instance;
+
     public static MidiService instance() {
         if (instance == null) {
             instance = new MidiService();
@@ -29,7 +32,14 @@ public class MidiService {
         player.setInstrument(instrument);
     }
 
-    public List<String> listMidiDevices() {
-        return Player.listAvailableDevices();
+    public static List<MidiDeviceBean> listMidiDevices() {
+        return Player.listAvailableDevices()
+                .stream()
+                .map(it -> new MidiDeviceBean(it))
+                .collect(Collectors.toList());
+    }
+
+    public MidiDeviceBean getActiveMidiDevice() {
+        return new MidiDeviceBean(player.getMidiDevice());
     }
 }

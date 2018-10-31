@@ -1,5 +1,6 @@
 package rest;
 
+import midigen.MidiDeviceBean;
 import midigen.MidiService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -33,9 +34,14 @@ public class MidiController {
         return "Ok";
     }
 
-
     @RequestMapping("/list")
-    public List<String> list() {
-        return MidiService.instance().listMidiDevices();
+    public List<MidiDeviceBean> list() {
+        return MidiService.listMidiDevices();
     }
+
+    @RequestMapping("/get/midiDevice")
+    public MidiDeviceBean getMidiDevice() {
+        return MidiService.instance().getActiveMidiDevice();
+    }
+
 }
