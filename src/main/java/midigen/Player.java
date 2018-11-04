@@ -44,9 +44,9 @@ public class Player {
     }
 
     public void randomSequence() {
-        var newSeq = new ArrayList<Tone>();
+        ArrayList<Tone> newSeq = new ArrayList<>();
 
-        for (var i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) {
             newSeq.add(new Tone(majorScaleOffsets.get(ThreadLocalRandom.current().nextInt(5)), 500));
         }
 
@@ -61,7 +61,7 @@ public class Player {
 
     public void play() {
         System.out.println("Playing: " + sequence);
-        for (var note : sequence) {
+        for (Tone note : sequence) {
             play(note);
         }
     }

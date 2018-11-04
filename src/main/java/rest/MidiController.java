@@ -17,14 +17,14 @@ public class MidiController {
 
     @RequestMapping("/play")
     public String greeting() {
-        var midiService = MidiService.instance();
+        MidiService midiService = MidiService.instance();
         midiService.newSequence();
         return "Played";
     }
 
     @RequestMapping("/play/scale")
     public String greeting(@RequestParam(value="offset", defaultValue = "0") Integer pitchOffset) {
-        var midiService = MidiService.instance();
+        MidiService midiService = MidiService.instance();
         midiService.play(pitchOffset);
         return "Played";
     }
