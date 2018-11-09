@@ -7,6 +7,6 @@ public class Main{
 
 //    public static void main(String[] args) {
 //       MidiService controller = new MidiService();
-//       controller.play();
+//       controller.playScale();
 //            }
 }

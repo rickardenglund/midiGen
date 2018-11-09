@@ -8,13 +8,47 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 public class Player {
-    private static final List<Integer> majorScaleOffsets = List.of(0, 2, 4, 5, 7, 9, 11, 12).stream().map(note -> note + 60).collect(Collectors.toList());
+    private static List<Integer> majorScaleOffsets = new ArrayList<>();
+    static {
+        majorScaleOffsets.add(0);
+        majorScaleOffsets.add(2);
+        majorScaleOffsets.add(4);
+        majorScaleOffsets.add(5);
+        majorScaleOffsets.add(7);
+        majorScaleOffsets.add(9);
+        majorScaleOffsets.add(11);
+        majorScaleOffsets.add(12);
+        majorScaleOffsets = majorScaleOffsets.stream().map(note -> note + 60).collect(Collectors.toList());
+    }
 
     private MidiDevice device = null;
-    private List<Tone> sequence;
+    private List<Note> sequence;
+
+    public Player(int deviceIndex) {
+        MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
+
+        try {
+            device = MidiSystem.getMidiDevice(infos[deviceIndex]);
+        } catch (MidiUnavailableException e) {
+            e.printStackTrace();
+        }
+
+        if (!(device.isOpen())) {
+            System.out.println("opening: " + device.getDeviceInfo().getDescription());
+
+            try {
+                device.open();
+            } catch (MidiUnavailableException e) {
+                e.printStackTrace();
+            }
+        }
+
+        randomSequence();
+    }
 
     public Player() {
         MidiDevice.Info[] infos = MidiSystem.getMidiDeviceInfo();
+
         for (int i = 0; i < infos.length; i++) {
             try {
                 device = MidiSystem.getMidiDevice(infos[i]);
@@ -25,6 +59,7 @@ public class Player {
                 break;
             }
         }
+
 
         if (!(device.isOpen())) {
             System.out.println("opening: " + device.getDeviceInfo().getDescription());
@@ -44,10 +79,10 @@ public class Player {
     }
 
     public void randomSequence() {
-        ArrayList<Tone> newSeq = new ArrayList<>();
+        ArrayList<Note> newSeq = new ArrayList<>();
 
         for (int i = 0; i < 3; i++) {
-            newSeq.add(new Tone(majorScaleOffsets.get(ThreadLocalRandom.current().nextInt(5)), 500));
+            newSeq.add(new Note(majorScaleOffsets.get(ThreadLocalRandom.current().nextInt(5)), 500));
         }
 
         sequence = newSeq;
@@ -55,13 +90,13 @@ public class Player {
 
     public void setScale(int i, int time) {
         sequence = majorScaleOffsets.stream()
-                .map(note -> new Tone(note + i, time))
+                .map(note -> new Note(note + i, time))
                 .collect(Collectors.toList());
     }
 
     public void play() {
-        System.out.println("Playing: " + sequence);
-        for (Tone note : sequence) {
+        System.out.println("Playing: " + device.getDeviceInfo().getName() + ": " + sequence);
+        for (Note note : sequence) {
             play(note);
         }
     }
@@ -83,7 +118,7 @@ public class Player {
         }
     }
 
-    private void play(Tone tone) {
+    private void play(Note tone) {
         ShortMessage myMsg = new ShortMessage();
         int channel = 0;
         try {
@@ -106,5 +141,9 @@ public class Player {
 
     public MidiDevice.Info getMidiDevice() {
         return device.getDeviceInfo();
+    }
+
+    public List<Note> getSequence() {
+        return sequence;
     }
 }

@@ -58,7 +58,7 @@
         loadMidiDevices() {
             var self = this;
             $.ajax({
-                url: "http://localhost:8080/list"
+                url: "http://pi:8080/list"
             }).then(function (data) {
                 console.log(data)
                 self.setState({midiDevices: data});

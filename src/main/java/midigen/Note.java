@@ -1,10 +1,10 @@
 package midigen;
 
-public class Tone {
+public class Note {
     private final Integer pitch;
     private final int time;
 
-    public Tone(Integer pitch, int time) {
+    public Note(Integer pitch, int time) {
         this.pitch = pitch;
         this.time = time;
     }
@@ -19,7 +19,7 @@ public class Tone {
 
     @Override
     public String toString() {
-        return "Tone{" +
+        return "Note{" +
                 "pitch=" + pitch +
                 '}';
     }

@@ -1,5 +1,6 @@
 package midigen;
 
+import javax.sound.midi.MidiDevice;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,18 +19,26 @@ public class MidiService {
         return instance;
     }
 
-    public void play(int scale) {
+    public void play() {
+        player.play();
+    }
+
+    public void playScale(int scale) {
         player.setScale(scale, 500);
         player.play();
     }
 
     public void newSequence() {
         player.randomSequence();
-        player.play();
     }
 
     public void setInstrument(int instrument) {
         player.setInstrument(instrument);
+    }
+
+    public MidiDevice.Info setMidiDevice(Integer deviceId) {
+        player = new Player(deviceId);
+        return player.getMidiDevice();
     }
 
     public static List<MidiDeviceBean> listMidiDevices() {
@@ -41,5 +50,9 @@ public class MidiService {
 
     public MidiDeviceBean getActiveMidiDevice() {
         return new MidiDeviceBean(player.getMidiDevice());
+    }
+
+    public List<Note> getNotes() {
+        return player.getSequence();
     }
 }
