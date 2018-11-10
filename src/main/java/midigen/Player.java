@@ -125,6 +125,7 @@ public class Player {
             long timeStamp = -1;
             Receiver receiver = MidiSystem.getReceiver();
 
+
             myMsg.setMessage(ShortMessage.NOTE_ON, channel, tone.getPitch(), 93);
             receiver.send(myMsg, timeStamp);
 

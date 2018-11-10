@@ -19,6 +19,7 @@ export default {
       activeDevice: {}
     };
   },
+  props: ['host'],
   methods: {
     setDevice: function(key) {
       axios({

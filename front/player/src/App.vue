@@ -14,7 +14,7 @@ export default {
   components: {
     MidiList,
     Player
-  }
+  }, 
 }
 </script>
 

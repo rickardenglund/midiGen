@@ -4,7 +4,6 @@
     <button v-on:click="play">play</button>
     <button v-on:click="newSequence">new</button>
     <button v-on:click="showNotes = !showNotes">{{showNotesBtnText}}</button>
-    
 
     <p v-if="showNotes" v-for="(note, key) in notes" :key="key">{{note.pitch}}</p>
 
