@@ -6,26 +6,30 @@
     <button v-on:click="showNotes = !showNotes">{{showNotesBtnText}}</button>
     
 
-    <p v-if="showNotes" v-for="(note, key) in notes" :key="key">{{note.pitch}}</p>
+    <ShowNotes v-if="showNotes" :notes="notes"></ShowNotes>
   <div> 
     <button v-on:click="playScale">play scale</button>
     <select v-model="currentScale">
-      <option v-for="i in 12" :key="i" :value="i"> {{i}}</option>
+      <option v-for="i in 12" :key="i" :value="i"> {{toNoteName(i)}}</option>
     </select>
   </div>
-  <p>{{this.currentScale}}</p>
+  <p>scale: {{toNoteName(this.currentScale)}}</p>
   </div>
 </template>
 
 <script>
 import axios from "axios";
+import ShowNotes from './ShowNotes.vue';
 export default {
   name: "Player",
+  components: {
+    ShowNotes
+  },
   data() {
     return {
       notes: [],
       showNotes: false,
-      currentScale: 'apa'
+      currentScale: 0
     };
   },
   methods: {
@@ -40,7 +44,7 @@ export default {
       );
     },
     playScale: function(event) {
-      axios({ method: "GET", url: "http://pi:8080/play/scale?offset=" + (this.currentScale-1) }).then(
+      axios({ method: "GET", url: "http://pi:8080/play/scale?offset=" + (this.currentScale) }).then(
         result => {
           this.notes = result.data;
         },
@@ -58,6 +62,10 @@ export default {
           console.error(error);
         }
       );
+    },
+    toNoteName: function(index) {
+      var notes = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B#', 'C'];
+      return notes[index];
     }
   },
   mounted() {},
