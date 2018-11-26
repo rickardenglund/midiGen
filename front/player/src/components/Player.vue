@@ -4,9 +4,16 @@
     <button v-on:click="play">play</button>
     <button v-on:click="newSequence">new</button>
     <button v-on:click="showNotes = !showNotes">{{showNotesBtnText}}</button>
+    
 
     <p v-if="showNotes" v-for="(note, key) in notes" :key="key">{{note.pitch}}</p>
-
+  <div> 
+    <button v-on:click="playScale">play scale</button>
+    <select v-model="currentScale">
+      <option v-for="i in 12" :key="i" :value="i"> {{i}}</option>
+    </select>
+  </div>
+  <p>{{this.currentScale}}</p>
   </div>
 </template>
 
@@ -17,12 +24,23 @@ export default {
   data() {
     return {
       notes: [],
-      showNotes: false
+      showNotes: false,
+      currentScale: 'apa'
     };
   },
   methods: {
     play: function(event) {
       axios({ method: "GET", url: "http://pi:8080/play" }).then(
+        result => {
+          this.notes = result.data;
+        },
+        error => {
+          console.error(error);
+        }
+      );
+    },
+    playScale: function(event) {
+      axios({ method: "GET", url: "http://pi:8080/play/scale?offset=" + (this.currentScale-1) }).then(
         result => {
           this.notes = result.data;
         },

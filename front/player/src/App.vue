@@ -1,7 +1,7 @@
 <template>
   <div id="app">
-    <player/>
-    <MidiList/>
+    <player />
+    <MidiList />
   </div>
 </template>
 
@@ -10,7 +10,7 @@ import MidiList from './components/MidiList.vue';
 import Player from './components/Player.vue';
 
 export default {
-  name: 'app',
+  name: 'app', 
   components: {
     MidiList,
     Player
